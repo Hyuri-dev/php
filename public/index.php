@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = $success ? "Empleado actualizado" : "Error al actualizar";
             } else {
                 // Insertar nuevo registro
-                $stmt = $pdo->prepare(query: "INSERT INTO employees (name,email,phone,department_id,country_id,state_id,city_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO employees (name,email,phone,department_id,country_id,state_id,city_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $success = $stmt->execute([$name, $email, $phone, $department, $country, $state, $city]);
                 $message = $success ? "Empleado agregado" : "Error al agregar";
             }
