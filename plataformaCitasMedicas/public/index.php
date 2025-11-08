@@ -105,12 +105,12 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
     
     <form method= "POST" id="formUsers" action="" class="mb-4">
       <input type="hidden" name="id" id="id"> 
-      <input type="text" name="username" id="username" placeholder="Usuario" required> <br><br>
-      <input type="password" name="password" id="password" placeholder="Contraseña" required><br><br>
-      <input type="text" name="name" id="name" placeholder="Nombre"><br><br>
-      <input type="text" name="lastname" id="lastname" placeholder="Apellido"><br><br>
-      <input type="date" name="birthday" id="date" placeholder="Fecha"><br><br>
-      <select name="city" id="city" required>
+      <input type="text" name="username" id="username" placeholder="Usuario" required class="form-control mb-2"> <br><br>
+      <input type="password" name="password" id="password" placeholder="Contraseña" required class="form-control mb-2"><br><br>
+      <input type="text" name="name" id="name" placeholder="Nombre" class="form-control mb-2"><br><br>
+      <input type="text" name="lastname" id="lastname" placeholder="Apellido" class="form-control mb-2"><br><br>
+      <input type="date" name="birthday" id="date" placeholder="Fecha" class="form-select mb-2"><br><br>
+      <select name="city" id="city" class="form-select mb-2" required>
 
             <option value="">Seleccione una ciudad</option>
             <?php foreach ($citie as $cit): ?>
@@ -118,7 +118,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
                   <?= htmlspecialchars($cit['name']) ?></option>
             <?php endforeach; ?>
       </select> <br><br>
-       <select name="typeUser" id="typeUser" required>
+       <select name="typeUser" id="typeUser" class="form-select mb-2" required>
 
             <option value="">Seleccione un tipo de usuario</option>
             <?php foreach ($typeUsers as $tuser): ?>
@@ -127,8 +127,8 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
             <?php endforeach; ?>
       </select>
       <br><br>
-      <button type="submit" name="save">Guardar</button>
-      <button type="button" onclick="limpiarFormulario()">Limpiar</button>
+      <button type="submit" name="save" class="btn btn-primary w-100">Guardar</button>
+      <button type="button" onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button>
 
 
   </form>
