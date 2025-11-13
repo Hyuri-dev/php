@@ -11,7 +11,7 @@
     }
 
     try {
-        $stmt = $db -> prepare("INSERT INTO specialty(name) VALUES(?)");
+        $stmt = $db -> prepare("INSERT INTO specialty(nombre) VALUES(?)");
         $success = $stmt->execute([$name]);
 
         if ($success){

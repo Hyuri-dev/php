@@ -1,10 +1,10 @@
 <?php 
 
 /**
- * @param PDO
- * @param int
- * @param string
- * @return string
+ * @param PDO Base de datos
+ * @param int ID de la especialidad
+ * @param string Especialidad
+ * @return string Mensaje de error
  */
 
  function actualizarEspecialidad($db, $id, $name): string {
@@ -14,7 +14,7 @@
 
     try {
         $sql = "UPDATE specialty SET
-        name = ?
+        nombre = ?
         WHERE id =?";
 
         $params = [$name];

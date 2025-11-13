@@ -40,7 +40,7 @@ function actualizarUsuario($db, $id, $username, $password, $name, $lastname, $bi
         $params = [$username, $hashed_password, $name, $lastname, $birthday, $city, $typeUser, $id];
 
     } else {
-        // El usuario no quiere cambiar la contraseña, así que no la incluimos en el UPDATE
+
         $sql = "UPDATE users SET 
                   username = ?, 
                   name = ?, 
