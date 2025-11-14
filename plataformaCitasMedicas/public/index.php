@@ -50,6 +50,15 @@ if (isset($_POST['save'])) {
     }
 }
 
+elseif (isset($_POST['delete'])) {
+  $id_delete = $_POST['DELETE'] ?? null;
+  if ($id_delete) {
+    $stmt = $pdo ->prepare(("DELETE FROM specialty WHERE id=?"));
+    $success = $stmt->execute([$id_delete]);
+    $message = $success ? "Especialidad Eliminada" : "Error al Eliminar";
+  }
+}
+
 // Eliminar usuario
 
 
@@ -92,6 +101,18 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
   }
 </script>
 </head>
+
+<nav class="navbar d-flex justify-content-center" style="background-color: #6063ffff">
+      <ul class="nav">
+    <li class="nav-item">
+      <a href="../public/index.php" class="nav-link active text-light" aria-current="page">Usuarios</a>
+    </li>
+    <li class="nav-item">
+      <a href="../public/crudSpecialty.php" class="nav-link active text-light" aria-current="page">Especialidades</a>
+    </li>
+  </ul> 
+</nav>
+
 
 
 <body>

@@ -8,7 +8,7 @@
  */
 
  function actualizarEspecialidad($db, $id, $name): string {
-    if(empty($id)||($name)){
+    if(empty($id)&&($name)){
         return "Error: Los campos son obligatorios";
     }
 
@@ -17,7 +17,7 @@
         nombre = ?
         WHERE id =?";
 
-        $params = [$name];
+        $params = [$name, $id];
 
         $stmt = $db ->prepare($sql);
         $stmt->execute($params);

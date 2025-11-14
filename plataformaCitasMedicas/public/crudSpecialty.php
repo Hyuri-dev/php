@@ -3,8 +3,24 @@
 require_once '../config/database.php';
 require_once '../src/controller/createSpecialty.php';
 require_once '../src/controller/updateSpecialty.php';
+require_once '../src/controller/deleteSpecialty.php';
 
 $message ='';
+
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+
+    $id_a_eliminar = $_GET['id'];
+
+    if (eliminarEspecialidad($conn , $id_a_eliminar)) {
+        $message = "Especialidad eliminada exitosamente";
+    } else {
+        $message = "Error al eliminar la especialidad";
+    }
+
+    // Limpiamos la URL para que no se re-elimine al recargar
+    header("Location: crudSpecialty.php");
+    exit;
+}
 
 if (isset($_POST['save'])) {
 
@@ -22,7 +38,7 @@ if (isset($_POST['save'])) {
     }
 
     // Resetea el formulario POST si la operación fue exitosa
-    if ($message === "Usuario creado exitosamente" || $message === "Usuario actualizado exitosamente") {
+    if ($message === "Especialidad creada exitosamente" || $message === "Especialidad actualizado exitosamente") {
         $_POST = [];
     }
 }
@@ -58,7 +74,7 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
       <a href="../public/index.php" class="nav-link active text-light" aria-current="page">Usuarios</a>
     </li>
     <li class="nav-item">
-      <a href="../public/crudSpecialty.php" class="nav-link active text-light" aria-current="page">Especalidades</a>
+      <a href="../public/crudSpecialty.php" class="nav-link active text-light" aria-current="page">Especialidades</a>
     </li>
   </ul> 
 </nav>
@@ -76,6 +92,7 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
       <input type="text" name="name" id="name" placeholder="Especialidad" required class="form-control mb-2"> <br><br>
       <button type="submit" name="save" class="btn btn-primary w-100" onclick="editarEspecialidad">Guardar</button>
       <button type="button" onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button> 
+      <br><br>
 
 <table class="table table-bordered table-striped">
         <thead>
@@ -88,7 +105,7 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
           <tr>
               <td> <?= htmlspecialchars($aEspecialty['nombre'] ?? '') ?></td>
               
-              <td>
+              <td> 
                   <button 
                     type="button" 
                     class="btn btn-sm btn-warning" 
