@@ -5,6 +5,9 @@
  * @return string
  */
 
+
+
+//CRUD CREADO PARA LA EVALUACION
  function crearEstatus($db, $status_name): string{
     if(empty($status_name)){
         return "Error: Los campos son obligatorios";
