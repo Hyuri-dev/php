@@ -21,7 +21,7 @@ session_start()
     <h2 class="card-title text-center mb-4 fw-light fs-3">Iniciar Sesión</h2>
     <p class="text-center text-muted mb-4">Acceso al panel de Citas Medicas</p>
 
-      <form action="autenticacion_login.php" method="POST">
+      <form action="../src/controller/login/autenticacion_login.php" method="POST">
         <div class="form-floating mb-3">
         <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Ingrese el usuario" required>
           <label for="usuario">Usuario</label>
