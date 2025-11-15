@@ -49,7 +49,7 @@ INSERT INTO `cities` (`id`, `name`) VALUES
 CREATE TABLE `specialty` (
   `id` int NOT NULL,
   `nombre` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
