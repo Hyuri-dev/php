@@ -104,7 +104,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 </script>
 </head>
 
-<nav class="navbar d-flex justify-content-center" style="background-color: #6063ffff">
+<!-- [<nav class="navbar d-flex justify-content-center" style="background-color: #6063ffff">
       <ul class="nav">
     <li class="nav-item">
       <a href="../public/index.php" class="nav-link active text-light" aria-current="page">Usuarios</a>
@@ -113,7 +113,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
       <a href="../public/crudSpecialty.php" class="nav-link active text-light" aria-current="page">Especialidades</a>
     </li>
   </ul> 
-</nav>
+</nav>] -->
 
 
 
@@ -158,7 +158,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
           <li class="nav-item">
             <a href="index.php" class="nav-link active">
               <i class="nav-icon fas fa-users"></i>
-              <p>Empleados</p>
+              <p>Usuarios</p>
             </a>
           </li>
         </ul>
@@ -171,7 +171,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
-        <h1>Gestión de Empleados</h1>
+        <h1>Gestión de Usuarios</h1>
       </div>
     </section>
     <section class="content">
@@ -192,43 +192,31 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
         <form method="POST" id="formEmpleado" action="">
           <input type="hidden" name="id" id="id" />
           <div class="form-group mb-2">
-            <input type="text" name="name" id="name" placeholder="Nombre" required class="form-control" />
+            <input type="text" name="username" id="username" placeholder="Usuario" required class="form-control" />
           </div>
           <div class="form-group mb-2">
-            <input type="email" name="email" id="email" placeholder="Email" required class="form-control" />
+            <input type="password" name="password" id="password" placeholder="Contraseña" required class="form-control" />
           </div>
           <div class="form-group mb-2">
-            <input type="text" name="phone" id="phone" placeholder="Teléfono (opcional)" class="form-control" />
+            <input type="text" name="name" id="name" placeholder="Nombre" class="form-control" />
+          </div>
           </div>
           <div class="form-group mb-2">
-            <select name="department" id="department" class="form-control" required>
-              <option value="">Seleccione departamento</option>
-              <?php foreach ($departments as $dep): ?>
-                <option value="<?= $dep['id'] ?>"><?= htmlspecialchars($dep['name']) ?></option>
+            <input type="text" name="lastname" id="lastname" placeholder="Apellido" class="form-control" />
+          </div>
+          <div class="form-group mb-2">
+            <select name="typeUser" id="typeUser" class="form-control" required>
+              <option value="">Seleccione el tipo de usuario</option>
+              <?php foreach ($typeUsers as $tuser): ?>
+                <option value="<?= $tuser['id'] ?>"><?= htmlspecialchars($tuser['name']) ?></option>
               <?php endforeach; ?>
             </select>
           </div>
           <div class="form-group mb-2">
-            <select name="country" id="country" class="form-control" required>
-              <option value="">Seleccione país</option>
-              <?php foreach ($countries as $c): ?>
+            <select name="city" id="city" class="form-control" required>
+              <option value="">Seleccione la ciudad</option>
+              <?php foreach ($citie as $c): ?>
                 <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="form-group mb-2">
-            <select name="state" id="state" class="form-control">
-              <option value="">Seleccione estado</option>
-              <?php foreach ($states as $st): ?>
-                <option value="<?= $st['id'] ?>"><?= htmlspecialchars($st['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="form-group mb-2">
-            <select name="city" id="city" class="form-control">
-              <option value="">Seleccione ciudad</option>
-              <?php foreach ($cities as $ci): ?>
-                <option value="<?= $ci['id'] ?>"><?= htmlspecialchars($ci['name']) ?></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -241,32 +229,31 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
         <table class="table table-bordered table-hover mt-4">
           <thead class="thead-light">
             <tr>
-              <th>Nombre</th><th>Email</th><th>Teléfono</th><th>Departamento</th><th>País</th><th>Estado</th><th>Ciudad</th><th>Acciones</th>
+              <th>usuario</th><th>nombre</th><th>Apellido</th><th>Ciudad</th><th>Tipo de usuario</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($employees as $emp): ?>
+            <?php foreach ($allUsers as $aUsers): ?>
               <tr>
-                <td><?= htmlspecialchars($emp['name']) ?></td>
-                <td><?= htmlspecialchars($emp['email']) ?></td>
-                <td><?= htmlspecialchars($emp['phone']) ?></td>
-                <td><?= htmlspecialchars($emp['department']) ?></td>
-                <td><?= htmlspecialchars($emp['country']) ?></td>
-                <td><?= htmlspecialchars($emp['state']) ?></td>
-                <td><?= htmlspecialchars($emp['city']) ?></td>
+                <td><?= htmlspecialchars($aUsers['username']) ?></td>
+                <td><?= htmlspecialchars($aUsers['name']) ?></td>
+                <td><?= htmlspecialchars($aUsers['lastname']) ?></td>
+                <td><?= htmlspecialchars($aUsers['city_name']) ?></td>
+                <td><?= htmlspecialchars($aUsers['type_user_name']) ?></td>
                 <td>
-                  <button class="btn btn-warning btn-sm" onclick="editarEmpleado(
-                    '<?= $emp['id'] ?>',
-                    '<?= htmlspecialchars(addslashes($emp['name'])) ?>',
-                    '<?= htmlspecialchars(addslashes($emp['email'])) ?>',
-                    '<?= htmlspecialchars(addslashes($emp['phone'])) ?>',
-                    '<?= $emp['department_id'] ?>',
-                    '<?= $emp['country_id'] ?>',
-                    '<?= $emp['state_id'] ?>',
-                    '<?= $emp['city_id'] ?>'
-                  )">Editar</button>
+                  <button class="btn btn-warning btn-sm" onclick="editarUsuario(
+              '<?= $aUsers['id']?>',
+              '<?= htmlspecialchars(addslashes($aUsers['username'])) ?>',
+              '<?= htmlspecialchars(addslashes($aUsers['name'])) ?>',
+              '<?= htmlspecialchars(addslashes($aUsers['lastname'])) ?>',
+              '<?= htmlspecialchars(addslashes($aUsers['birthdate'])) ?>',
+              '<?= $aUsers['idCity'] ?>',
+              '<?= $aUsers['idTypeUser'] ?>'
+              )">
+              Editar
+              </button>
                   <form method="POST" action="" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este empleado?');">
-                    <input type="hidden" name="id_delete" value="<?= $emp['id'] ?>" />
+                    <input type="hidden" name="id_delete" value="<?= $aUsers['id'] ?>" />
                     <button type="submit" name="delete" class="btn btn-danger btn-sm">Eliminar</button>
                   </form>
                 </td>
@@ -283,7 +270,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
   <!-- Footer -->
   <footer class="main-footer text-center">
-    <strong>&copy; 2025 Tu Institución</strong> Todos los derechos reservados.
+    <strong>&copy; 2025 ServiCare</strong> Todos los derechos reservados.
   </footer>
 
 
