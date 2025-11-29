@@ -33,10 +33,7 @@ session_start()
         <?php
         //Mensaje que maneja el error del login
         if(isset($_SESSION['error_login'])){
-          echo '<div class="alert alert-danger" role="alert';
-          echo $_SESSION['error_login'];
-          echo['<div>'];
-
+          echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error_login'] . '</div>';
           unset($_SESSION['error_login']);
         }  
         ?>

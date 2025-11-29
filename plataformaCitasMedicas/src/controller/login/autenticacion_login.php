@@ -8,19 +8,19 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
       $user_form = $_POST["usuario"];
       $password_form = $_POST["contraseña"];
 
-      $sql = "SELECT id, username, password FROM usuarios WHERE username = :usuario LIMIT 1";
+      $sql = "SELECT id, username, password FROM users WHERE username = :usuario LIMIT 1";
 
       $stmt = $conn->prepare($sql);
 
-      $stmt->execute();
+      $stmt->execute([':usuario' => $user_form]);
 
       $user_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
       if($user_db) {
 
-        if(password_verify($password_form, $user_db["password"])){
+        if($password_form === $user_db["password"]){
           $_SESSION['user_id'] = $user_db['id'];
-          $_SESSION['user_name'] = $user_db['username'];
+          $_SESSION['username'] = $user_db['username'];
           $_SESSION['logueado'] = true;
 
           header('location: ../../../public/index.php');
@@ -28,13 +28,13 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
 
         } else {
           $_SESSION['error_login'] = "Contraseña incorrecta, intentelo de nuevo";
-          header("Location ../../public/login.php");
+          header("Location: ../../public/login.php");
           exit;
       }
 
       } else{
       $_SESSION["error_login"] = "Usuario no encontrado";
-      header("Location ../../public/index.login.php");
+      header("Location: ../../public/login.php");
       exit;
       }
     //code...
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
 
 
 } else {
-  header("Location: ../../../login.php");
+  header("Location: ../../../public/login.php");
   exit;
  
 }

@@ -4,6 +4,12 @@ require_once '../src/controller/createUser.php';
 require_once '../src/controller/updateUser.php';
 require_once '../src/controller/deleteUser.php';
 
+session_start();
+// Verificacion de sesión
+if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
+    header("Location: login.php");
+    exit;
+}
 
 $message = '';
 
@@ -101,6 +107,15 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
       document.getElementById('formUsers').reset(); 
       document.getElementById('id').value = ""; 
   }
+  // Temporizador de notificacion
+  setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if (alert) {
+        alert.style.transition = "opacity 0.5s ease";
+        alert.style.opacity = '0';
+        setTimeout(() => alert.remove(), 500);
+    }
+}, 4500);
 </script>
 </head>
 
@@ -147,10 +162,10 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
 
   <!-- Sidebar -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="main-sidebar sidebar-#fff elevation-4">
     <a href="index.php" class="brand-link">
       <i class="fas fa-cogs"></i>
-      <span class="brand-text font-weight-light">Gestión Empleados</span>
+      <span class="brand-text font-weight-light">Gestión Citas Medicas</span>
     </a>
     <div class="sidebar">
       <nav class="mt-2">
@@ -160,6 +175,20 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
               <i class="nav-icon fas fa-users"></i>
               <p>Usuarios</p>
             </a>
+            <a href="crudSpecialty.php" class="nav-link active">
+              <i class="nav-icon fas fa-users"></i>
+              <p>Especialidad</p>
+            </a>
+            <a href="crudSpecialty.php" class="nav-link active">
+              <i class="nav-icon fas fa-users"></i>
+              <p>Estados de las citas</p>
+            </a>
+            <!-- Pendiente por crear el apartado de las citas -->
+            <a href="crudSpecialty.php" class="nav-link active">
+              <i class="nav-icon fas fa-users"></i>
+              <p>Citas</p>
+            </a>
+            
           </li>
         </ul>
       </nav>
@@ -195,7 +224,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
             <input type="text" name="username" id="username" placeholder="Usuario" required class="form-control" />
           </div>
           <div class="form-group mb-2">
-            <input type="password" name="password" id="password" placeholder="Contraseña" required class="form-control" />
+            <input type="password" name="password" id="password" placeholder="Contraseña" class="form-control" />
           </div>
           <div class="form-group mb-2">
             <input type="text" name="name" id="name" placeholder="Nombre" class="form-control" />
@@ -203,6 +232,9 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
           </div>
           <div class="form-group mb-2">
             <input type="text" name="lastname" id="lastname" placeholder="Apellido" class="form-control" />
+          </div>
+          <div class="form-group mb-2">
+            <input type="date" name="birthday" id="date" placeholder="Fecha" >
           </div>
           <div class="form-group mb-2">
             <select name="typeUser" id="typeUser" class="form-control" required>
