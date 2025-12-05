@@ -92,6 +92,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
+<link rel="stylesheet" href="../styles/buttons.css">
 <script>
   function editarUsuario (id, username, name, lastname, date, city, typeUser){
     document.getElementById('id').value = id; 
@@ -134,8 +135,6 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-
-
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
@@ -162,9 +161,9 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
 
   <!-- Sidebar -->
-  <aside class="main-sidebar sidebar-#fff elevation-4">
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index.php" class="brand-link">
-      <i class="fas fa-cogs"></i>
+      <i class="fa-solid fa-house-medical"></i>
       <span class="brand-text font-weight-light">Gestión Citas Medicas</span>
     </a>
     <div class="sidebar">
@@ -176,16 +175,17 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
               <p>Usuarios</p>
             </a>
             <a href="crudSpecialty.php" class="nav-link active">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="fa-solid fa-user-tie"></i>
               <p>Especialidad</p>
             </a>
+            
             <a href="crudSpecialty.php" class="nav-link active">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="fa-solid fa-gear"></i>
               <p>Estados de las citas</p>
             </a>
             <!-- Pendiente por crear el apartado de las citas -->
             <a href="crudSpecialty.php" class="nav-link active">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="fa-solid fa-calendar"></i>
               <p>Citas</p>
             </a>
             
@@ -301,7 +301,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
 
   <!-- Footer -->
-  <footer class="main-footer text-center">
+  <footer class="main-footer text-center bg-dark">
     <strong>&copy; 2025 ServiCare</strong> Todos los derechos reservados.
   </footer>
 

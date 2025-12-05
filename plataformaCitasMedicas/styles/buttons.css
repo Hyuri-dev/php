@@ -1,0 +1,25 @@
+body {
+  background-color: #343a40;
+}
+
+.btn btn-light active {
+  height: 40px;
+  width: 245px;
+}
+
+.container_button {
+  width: 245 px;
+  height: 30px;
+  background-color: aquamarine;
+}
+
+.nav-link.active {
+  background-color: #6d6c6c !important;
+}
+
+p {
+  color: whitesmoke;
+}
+
+.body.sidebar-mini {
+}
