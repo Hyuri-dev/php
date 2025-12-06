@@ -1,4 +1,8 @@
 <?php
+
+require_once '../config/database.php';
+require_once '../src/controller/statusController.php';
+
 session_start();
 // Verificacion de sesión
 if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
@@ -6,10 +10,7 @@ if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     exit;
 }
 
-require_once '../config/database.php';
-require_once '../src/controller/createSpecialty.php';
-require_once '../src/controller/updateSpecialty.php';
-require_once '../src/controller/deleteSpecialty.php';
+
 
 $message ='';
 
@@ -17,14 +18,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
 
     $id_a_eliminar = $_GET['id'];
 
-    if (eliminarEspecialidad($conn , $id_a_eliminar)) {
-        $message = "Especialidad eliminada exitosamente";
+    if (eliminarEstatus($conn , $id_a_eliminar)) {
+        $message = "Estatus eliminada exitosamente";
     } else {
-        $message = "Error al eliminar la especialidad";
+        $message = "Error al eliminar el Estatus";
     }
 
     // Limpiamos la URL para que no se re-elimine al recargar
-    header("Location: crudSpecialty.php");
+    header("Location: crudStatus.php");
     exit;
 }
 
@@ -32,24 +33,25 @@ if (isset($_POST['save'])) {
 
     // Recoge todos los datos
     $id = $_POST['id'] ?? '';
-    $specialty = $_POST['name'] ?? '';
+    $status_name = $_POST['status'] ?? '';
 
     // Decide si crear o actualizar
     if (!empty($id)) {
         // Si hay un ID, actualizamos
-        $message = actualizarEspecialidad($conn, $id, $specialty);
+        $message = actualizarEstatus($conn, $id, $status_name);
     } else {
         // Si no hay ID, creamos
-        $message = crearEspecialidad($conn,$specialty);
+        $message = crearEstatus($conn,$status_name);
     }
 
     // Resetea el formulario POST si la operación fue exitosa
-    if ($message === "Especialidad creada exitosamente" || $message === "Especialidad actualizado exitosamente") {
+    if ($message === "Estatus creado exitosamente" || $message === "Estatus actualizado exitosamente") {
         $_POST = [];
     }
 }
-$allEspecialty = $conn->query("SELECT * FROM specialty")
+$allStatus = $conn->query("SELECT * FROM status")
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -63,18 +65,13 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
 <link rel="stylesheet" href="../styles/styles.css">
 
 <script>
-  function editarUsuario (id, username, name, lastname, date, city, typeUser){
+  function editarEspecialidad (id, status){
     document.getElementById('id').value = id; 
-    document.getElementById('username').value = username;
-    document.getElementById('name').value = name;
-    document.getElementById('lastname').value = lastname;
-    document.getElementById('date').value = date;
-    document.getElementById('city').value = city;
-    document.getElementById('typeUser').value = typeUser;
+    document.getElementById('status').value = status;
   }
 
   function limpiarFormulario() {
-      document.getElementById('formUsers').reset(); 
+      document.getElementById('statusForm').reset(); 
       document.getElementById('id').value = ""; 
   }
   // Temporizador de notificacion
@@ -119,7 +116,7 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
 
 
   <!-- Sidebar -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index.php" class="brand-link">
       <i class="fa-solid fa-house-medical"></i>
       <span class="brand-text font-weight-light">Gestión Citas Medicas</span>
@@ -158,7 +155,7 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
-        <h1>Gestión de Especialidades</h1>
+        <h1>Gestión de Estados</h1>
       </div>
     </section>
     <section class="content">
@@ -176,35 +173,36 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
 
 
         <!-- Formulario -->
-        <form method= "POST" id="specialtyForm" action="" class="mb-4">
-          <input type="hidden" name="id" id="id"> 
-          <input type="text" name="name" id="name" placeholder="Especialidad" required class="form-control mb-2"> <br><br>
-            <button type="submit" name="save" class="btn btn-primary w-100" onclick="editarEspecialidad">Guardar</button>
-            <button type="button" onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button> 
+    <form action="" method="post" id="statusForm" class="mb-4">
+        <input type="hidden" name="id" id="id"> 
+        <input type="text" name="status" id="status" placeholder="Tipo de Estatus" require class="form-control mb-2"> <br><br>
+        <button type="submit" name="save" class="btn btn-primary w-100">Ingresar</button>
+        <button onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button>
+    </form>
 
 
         <!-- Tabla -->
         <table class="table table-bordered table-hover mt-4">
           <thead class="thead-light">
             <tr>
-              <th>Especialidad</th><th>Acciones</th>
+              <th>Estado</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($allEspecialty as $aEspecialty): ?>
+            <?php foreach ($allStatus as $aStatus): ?>
               <tr>
-              <td> <?= htmlspecialchars($aEspecialty['nombre'] ?? '') ?></td>
+              <td> <?= htmlspecialchars($aStatus['name'] ?? '') ?></td>
               
               <td> 
                   <button 
                     type="button" 
                     class="btn btn-sm btn-warning" 
-                    onclick="editarEspecialidad(<?= $aEspecialty['id'] ?>, '<?= htmlspecialchars($aEspecialty['nombre'] ?? '') ?>')">
+                    onclick="editarEspecialidad(<?= $aStatus['id'] ?>, '<?= htmlspecialchars($aStatus['name'] ?? '') ?>')">
                       Editar
                   </button>
-                                  <a href="crudSpecialty.php?action=delete&id=<?= $aEspecialty['id'] ?>" 
+                                  <a href="crudStatus.php?action=delete&id=<?= $aStatus['id'] ?>" 
                  class="btn btn-danger btn-sm" 
-                 onclick="return confirm('¿Estás seguro de que quieres eliminar a este usuario?');">
+                 onclick="return confirm('¿Estás seguro de que quieres eliminar este estado?');">
                  Eliminar
               </a>
                   </td>

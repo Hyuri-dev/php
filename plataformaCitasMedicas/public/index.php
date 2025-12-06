@@ -92,7 +92,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
-<link rel="stylesheet" href="../styles/buttons.css">
+<link rel="stylesheet" href="../styles/styles.css">
 <script>
   function editarUsuario (id, username, name, lastname, date, city, typeUser){
     document.getElementById('id').value = id; 
@@ -119,19 +119,6 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 }, 4500);
 </script>
 </head>
-
-<!-- [<nav class="navbar d-flex justify-content-center" style="background-color: #6063ffff">
-      <ul class="nav">
-    <li class="nav-item">
-      <a href="../public/index.php" class="nav-link active text-light" aria-current="page">Usuarios</a>
-    </li>
-    <li class="nav-item">
-      <a href="../public/crudSpecialty.php" class="nav-link active text-light" aria-current="page">Especialidades</a>
-    </li>
-  </ul> 
-</nav>] -->
-
-
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -161,7 +148,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
 
   <!-- Sidebar -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index.php" class="brand-link">
       <i class="fa-solid fa-house-medical"></i>
       <span class="brand-text font-weight-light">Gestión Citas Medicas</span>
@@ -179,7 +166,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
               <p>Especialidad</p>
             </a>
             
-            <a href="crudSpecialty.php" class="nav-link active">
+            <a href="status.php" class="nav-link active">
               <i class="fa-solid fa-gear"></i>
               <p>Estados de las citas</p>
             </a>
@@ -253,7 +240,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
             </select>
           </div>
           <button type="submit" name="save" class="btn btn-primary w-100">Guardar</button>
-          <button type="button" onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button>
+          <button type="button" id="btnLimpiar" onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button>
         </form>
 
 
@@ -273,7 +260,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
                 <td><?= htmlspecialchars($aUsers['city_name']) ?></td>
                 <td><?= htmlspecialchars($aUsers['type_user_name']) ?></td>
                 <td>
-                  <button class="btn btn-warning btn-sm" onclick="editarUsuario(
+                  <button class="btn btn-warning btn-sm" id="btnEditar" onclick="editarUsuario(
               '<?= $aUsers['id']?>',
               '<?= htmlspecialchars(addslashes($aUsers['username'])) ?>',
               '<?= htmlspecialchars(addslashes($aUsers['name'])) ?>',
@@ -284,7 +271,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
               )">
               Editar
               </button>
-                  <form method="POST" action="" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este empleado?');">
+                  <form method="POST" action="" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
                     <input type="hidden" name="id_delete" value="<?= $aUsers['id'] ?>" />
                     <button type="submit" name="delete" class="btn btn-danger btn-sm">Eliminar</button>
                   </form>
@@ -313,6 +300,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+<script src="../javascript/index.js"></script>
 
 
 </body>
