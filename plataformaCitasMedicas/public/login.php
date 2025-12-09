@@ -43,7 +43,7 @@ session_start()
         <hr class="my-4">
 
         <div class="text-center">
-          <p class="mb-0">¿No posees cuenta? <a href="#">Registrate Aqui</a></p>
+          <p class="mb-0">¿No posees cuenta? <a href="register.php">Registrate Aqui</a></p>
         </div>
         
       </form>
