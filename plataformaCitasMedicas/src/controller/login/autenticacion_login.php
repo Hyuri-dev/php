@@ -36,13 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $_SESSION['rol_nombre'] = $user_db['rol']; // Opcional: Guardar el nombre del rol (Admin/Medico)
                 $_SESSION['logueado'] = true;
 
-                // AQUÍ ES DONDE DECIDES A DÓNDE VAN
-                // Si quieres separar por roles, usa el switch aquí.
-                // Si no, déjalo ir al index.php
+              // ------- REDIRECCIÓN SEGUN EL USUARIO AUTENTICADO -------
                 switch($_SESSION['rol']){
                 case 1: 
-                header('location: ../../../public/index.php');
-                exit;
+                  header('location: ../../../public/index.php');
+                  exit;
+                  break;
+                case 2:
+                  header('location: ../../../public/views/index_client.php');
+                  exit;
+                  break;
+                case 3:
+                  header('location: ../../../public/views/index_doctor.php');
+                  exit;
+                  break;
               
 
 

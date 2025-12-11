@@ -1,9 +1,9 @@
 <?php
-require_once '../config/database.php';
-require_once '../src/controller/createUser.php';
-require_once '../src/controller/updateUser.php';
-require_once '../src/controller/deleteUser.php';
-require_once '../src/controller/rol_check.php';
+require_once __DIR__ . '/../../config/database.php';
+// require_once '../src/controller/createUser.php';
+// require_once '../src/controller/updateUser.php';
+// require_once '../src/controller/deleteUser.php';
+require_once __DIR__.'../../../src/controller/rol_check.php';
 
 // if (session_status() === PHP_SESSION_NONE) {
 //     session_start();
@@ -14,7 +14,7 @@ if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     exit;
 }
 
-verificarRol([2]);
+verificarRol([1,2]);
 $message = '';
 
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {

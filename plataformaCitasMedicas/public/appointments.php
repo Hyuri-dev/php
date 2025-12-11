@@ -84,6 +84,25 @@ FROM users u
 LEFT JOIN cities c ON u.idCity = c.id
 LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
+//  Datos de las citas medicas
+
+$sql = "Select
+
+    c.id AS id_appointment,
+    c.dateAppointment,
+    c.idStatus,
+    p.name AS patient,
+    p.lastname  AS patient_lastname,
+    m.name AS doctor,
+    e.nombre AS specialty
+  FROM appointment c
+  INNER JOIN users p ON c.idUser =p.id
+  INNER JOIN users m ON c.idDoctor =m.id
+  LEFT JOIN  specialty e ON c.idSpecialty = e.id
+  ORDER BY c.dateAppointment ASC";
+
+$resultado = $conn -> query($sql);
+
 
 
 ?>
@@ -175,7 +194,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
               <p>Estados de las citas</p>
             </a>
             <!-- Pendiente por crear el apartado de las citas -->
-            <a href="appointments.php" class="nav-link active">
+            <a href="crudSpecialty.php" class="nav-link active">
               <i class="fa-solid fa-calendar"></i>
               <p>Citas</p>
             </a>
@@ -191,11 +210,113 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
-        <h1>Gestión de Usuarios</h1>
+        <h1>Citas Medicas</h1>
       </div>
     </section>
     <section class="content">
       <div class="container-fluid">
+
+      <div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <h1>Gestión de Citas Médicas</h1>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Listado de Citas Programadas</h3>
+                    <div class="card-tools">
+                        <a href="crear_cita.php" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Nueva Cita
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover table-striped text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha y Hora</th>
+                                <th>Paciente</th>
+                                <th>Médico / Especialidad</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            // VERIFICAR SI HAY CITAS
+                            if ($resultado-> rowCount()) {
+                                // ITERAR SOBRE LOS DATOS
+                                while($fila = $resultado->fetch(PDO::FETCH_ASSOC)) { 
+                                    
+                                    // Lógica visual para el estado (Badges de Bootstrap)
+                                    $badgeColor = 'secondary';
+                                    if($fila['estado'] == 'Confirmada') $badgeColor = 'success';
+                                    if($fila['estado'] == 'Pendiente') $badgeColor = 'warning';
+                                    if($fila['estado'] == 'Cancelada') $badgeColor = 'danger';
+                            ?>
+                            
+                            <tr>
+                                <td><?php echo $fila['id_cita']; ?></td>
+                                
+                                <td>
+                                    <?php echo date('d/m/Y h:i A', strtotime($fila['fecha_hora'])); ?>
+                                </td>
+                                
+                                <td>
+                                    <strong><?php echo $fila['paciente'] . " " . $fila['paciente_apellido']; ?></strong>
+                                    <br>
+                                    <small class="text-muted">Motivo: <?php echo substr($fila['motivo'], 0, 20); ?>...</small>
+                                </td>
+                                
+                                <td>
+                                    Dr. <?php echo $fila['medico']; ?>
+                                    <br>
+                                    <small class="text-info"><?php echo $fila['especialidad']; ?></small>
+                                </td>
+                                
+                                <td>
+                                    <span class="badge badge-<?php echo $badgeColor; ?>">
+                                        <?php echo $fila['estado']; ?>
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info btn-sm btn-editar" 
+                                                data-id="<?php echo $fila['id_cita']; ?>" title="Editar">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        
+                                        <button type="button" class="btn btn-danger btn-sm btn-eliminar" 
+                                                data-id="<?php echo $fila['id_cita']; ?>" title="Cancelar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <?php 
+                                } // Fin del while
+                            } else { 
+                            ?>
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay citas registradas.</td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+    </section>
+</div>
 
 
         <?php if ($message): ?>
@@ -208,82 +329,7 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
         <?php endif; ?>
 
 
-        <!-- Formulario -->
-        <form method="POST" id="formEmpleado" action="">
-          <input type="hidden" name="id" id="id" />
-          <div class="form-group mb-2">
-            <input type="text" name="username" id="username" placeholder="Usuario" required class="form-control" />
-          </div>
-          <div class="form-group mb-2">
-            <input type="password" name="password" id="password" placeholder="Contraseña" class="form-control" />
-          </div>
-          <div class="form-group mb-2">
-            <input type="text" name="name" id="name" placeholder="Nombre" class="form-control" />
-          </div>
-          </div>
-          <div class="form-group mb-2">
-            <input type="text" name="lastname" id="lastname" placeholder="Apellido" class="form-control" />
-          </div>
-          <div class="form-group mb-2">
-            <input type="date" name="birthday" id="date" placeholder="Fecha" >
-          </div>
-          <div class="form-group mb-2">
-            <select name="typeUser" id="typeUser" class="form-control" required>
-              <option value="">Seleccione el tipo de usuario</option>
-              <?php foreach ($typeUsers as $tuser): ?>
-                <option value="<?= $tuser['id'] ?>"><?= htmlspecialchars($tuser['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="form-group mb-2">
-            <select name="city" id="city" class="form-control" required>
-              <option value="">Seleccione la ciudad</option>
-              <?php foreach ($citie as $c): ?>
-                <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <button type="submit" name="save" class="btn btn-primary w-100">Guardar</button>
-          <button type="button" id="btnLimpiar" onclick="limpiarFormulario()" class="btn btn-secondary w-100 mt-2">Limpiar</button>
-        </form>
 
-
-        <!-- Tabla -->
-        <table class="table table-bordered table-hover mt-4">
-          <thead class="thead-light">
-            <tr>
-              <th>usuario</th><th>nombre</th><th>Apellido</th><th>Ciudad</th><th>Tipo de usuario</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($allUsers as $aUsers): ?>
-              <tr>
-                <td><?= htmlspecialchars($aUsers['username']) ?></td>
-                <td><?= htmlspecialchars($aUsers['name']) ?></td>
-                <td><?= htmlspecialchars($aUsers['lastname']) ?></td>
-                <td><?= htmlspecialchars($aUsers['city_name']) ?></td>
-                <td><?= htmlspecialchars($aUsers['type_user_name']) ?></td>
-                <td>
-                  <button class="btn btn-warning btn-sm" id="btnEditar" onclick="editarUsuario(
-              '<?= $aUsers['id']?>',
-              '<?= htmlspecialchars(addslashes($aUsers['username'])) ?>',
-              '<?= htmlspecialchars(addslashes($aUsers['name'])) ?>',
-              '<?= htmlspecialchars(addslashes($aUsers['lastname'])) ?>',
-              '<?= htmlspecialchars(addslashes($aUsers['birthdate'])) ?>',
-              '<?= $aUsers['idCity'] ?>',
-              '<?= $aUsers['idTypeUser'] ?>'
-              )">
-              Editar
-              </button>
-                  <form method="POST" action="" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
-                    <input type="hidden" name="id_delete" value="<?= $aUsers['id'] ?>" />
-                    <button type="submit" name="delete" class="btn btn-danger btn-sm">Eliminar</button>
-                  </form>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
 
 
       </div>
