@@ -63,14 +63,10 @@ $allEspecialty = $conn->query("SELECT * FROM specialty")
 <link rel="stylesheet" href="../styles/styles.css">
 
 <script>
-  function editarUsuario (id, username, name, lastname, date, city, typeUser){
+  function editarEspecialidad (id, name){
     document.getElementById('id').value = id; 
-    document.getElementById('username').value = username;
     document.getElementById('name').value = name;
-    document.getElementById('lastname').value = lastname;
-    document.getElementById('date').value = date;
-    document.getElementById('city').value = city;
-    document.getElementById('typeUser').value = typeUser;
+
   }
 
   function limpiarFormulario() {

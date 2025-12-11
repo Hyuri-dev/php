@@ -14,7 +14,7 @@ if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     exit;
 }
 
-verificarRol([1]);
+verificarRol([2]);
 $message = '';
 
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {

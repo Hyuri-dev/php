@@ -1,5 +1,9 @@
-<?php 
-session_start()
+<?php
+session_start();
+
+// if ($usuario_valido) {
+
+// }
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +35,6 @@ session_start()
           <label for="contraseña">Contraseña</label>
         </div>
         <?php
-        //Mensaje que maneja el error del login
         if(isset($_SESSION['error_login'])){
           echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error_login'] . '</div>';
           unset($_SESSION['error_login']);
@@ -50,6 +53,8 @@ session_start()
 
 
   </div>
+
+  
   <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script> -->
