@@ -174,7 +174,6 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
               <i class="fa-solid fa-gear"></i>
               <p>Estados de las citas</p>
             </a>
-            <!-- Pendiente por crear el apartado de las citas -->
             <a href="appointments.php" class="nav-link active">
               <i class="fa-solid fa-calendar"></i>
               <p>Citas</p>
@@ -305,6 +304,8 @@ LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 <script src="../javascript/index.js"></script>
+<script src="../javascript/appointment.js"></script>
+
 
 
 </body>

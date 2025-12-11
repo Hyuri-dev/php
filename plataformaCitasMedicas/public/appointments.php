@@ -91,6 +91,7 @@ $sql = "Select
     c.id AS id_appointment,
     c.dateAppointment,
     c.idStatus,
+    s.name AS status_name,
     p.name AS patient,
     p.lastname  AS patient_lastname,
     m.name AS doctor,
@@ -99,6 +100,7 @@ $sql = "Select
   INNER JOIN users p ON c.idUser =p.id
   INNER JOIN users m ON c.idDoctor =m.id
   LEFT JOIN  specialty e ON c.idSpecialty = e.id
+  LEFT JOIN  status s ON c.idStatus = s.id
   ORDER BY c.dateAppointment ASC";
 
 $resultado = $conn -> query($sql);
@@ -146,7 +148,7 @@ $resultado = $conn -> query($sql);
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -207,14 +209,6 @@ $resultado = $conn -> query($sql);
 
 
   <!-- Content Wrapper -->
-  <div class="content-wrapper">
-    <section class="content-header">
-      <div class="container-fluid">
-        <h1>Citas Medicas</h1>
-      </div>
-    </section>
-    <section class="content">
-      <div class="container-fluid">
 
       <div class="content-wrapper">
     <section class="content-header">
@@ -223,16 +217,16 @@ $resultado = $conn -> query($sql);
         </div>
     </section>
 
-    <section class="content">
+    <section class="content" style="display: flex;">
         <div class="container-fluid">
             
             <div class="card card-primary card-outline">
                 <div class="card-header">
-                    <h3 class="card-title">Listado de Citas Programadas</h3>
+                    <h3 class="card-title" style="color: #0069D9">Listado de Citas Programadas</h3> 
                     <div class="card-tools">
-                        <a href="crear_cita.php" class="btn btn-sm btn-primary">
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target='#modalNewAppointment'>
                             <i class="fas fa-plus"></i> Nueva Cita
-                        </a>
+                          </button>
                     </div>
                 </div>
 
@@ -256,46 +250,54 @@ $resultado = $conn -> query($sql);
                                 while($fila = $resultado->fetch(PDO::FETCH_ASSOC)) { 
                                     
                                     // Lógica visual para el estado (Badges de Bootstrap)
+                                    $estadoTexto = "desconocido";
                                     $badgeColor = 'secondary';
-                                    if($fila['estado'] == 'Confirmada') $badgeColor = 'success';
-                                    if($fila['estado'] == 'Pendiente') $badgeColor = 'warning';
-                                    if($fila['estado'] == 'Cancelada') $badgeColor = 'danger';
+
+                                    if($fila['idStatus'] == '4') {
+                                      $estadoTexto = "Completada";
+                                      $badgeColor = 'success';
+                                    }else if ($fila['idStatus'] == '3') {
+                                      $estadoTexto = "Pendiente";
+                                      $badgeColor = 'warning';
+                                    } else if ($fila['idStatus'] == '2') {
+                                      $estadoTexto = "Cancelado";
+                                      $badgeColor = 'danger';} // // Cancelada
                             ?>
                             
                             <tr>
-                                <td><?php echo $fila['id_cita']; ?></td>
+                                <td><?php echo $fila['id_appointment']; ?></td>
                                 
                                 <td>
-                                    <?php echo date('d/m/Y h:i A', strtotime($fila['fecha_hora'])); ?>
+                                    <?php echo date('d/m/Y h:i A', strtotime($fila['dateAppointment'])); ?>
                                 </td>
                                 
                                 <td>
-                                    <strong><?php echo $fila['paciente'] . " " . $fila['paciente_apellido']; ?></strong>
+                                    <strong><?php echo $fila['patient'] . " " . $fila['patient_lastname']; ?></strong>
                                     <br>
-                                    <small class="text-muted">Motivo: <?php echo substr($fila['motivo'], 0, 20); ?>...</small>
+                                    <!-- <small class="text-muted">Motivo: <?php echo substr($fila['motivo'], 0, 20); ?>...</small> -->
                                 </td>
                                 
                                 <td>
-                                    Dr. <?php echo $fila['medico']; ?>
+                                    Dr. <?php echo $fila['doctor']; ?>
                                     <br>
-                                    <small class="text-info"><?php echo $fila['especialidad']; ?></small>
+                                    <small class="text-info"><?php echo $fila['specialty']; ?></small>
                                 </td>
                                 
                                 <td>
                                     <span class="badge badge-<?php echo $badgeColor; ?>">
-                                        <?php echo $fila['estado']; ?>
+                                        <?php echo $fila['status_name']; ?>
                                     </span>
                                 </td>
                                 
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-info btn-sm btn-editar" 
-                                                data-id="<?php echo $fila['id_cita']; ?>" title="Editar">
+                                                data-id="<?php echo $fila['id_appointment']; ?>" title="Editar">
                                             <i class="fas fa-pencil-alt"></i>
                                         </button>
                                         
                                         <button type="button" class="btn btn-danger btn-sm btn-eliminar" 
-                                                data-id="<?php echo $fila['id_cita']; ?>" title="Cancelar">
+                                                data-id="<?php echo $fila['id_appointment']; ?>" title="Cancelar">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
@@ -341,9 +343,54 @@ $resultado = $conn -> query($sql);
   <footer class="main-footer text-center bg-dark">
     <strong>&copy; 2025 ServiCare</strong> Todos los derechos reservados.
   </footer>
-
-
 </div>
+
+<div class="modal fade" id="modalNewAppointment" tabindex="-1" role="dialog" aria-labelledby="createAppointment" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear nueva cita</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+<form id="appointment-form">
+        <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="paciente">Paciente</label>
+            <select class="form-control" name="idUser" required>
+              <option value="">Seleccione...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="doctor">Doctor</label>
+            <select class="form-control" name="idUser" required>
+              <option value="">Seleccione...</option>
+            </select>
+      </div>
+
+      <div class="form-group">
+            <label>Fecha y Hora</label>
+            <input type="datetime-local" class="form-control" name="dateAppointment" required>
+      </div>
+      <div class="form-group">
+            <label for="doctor">Especialidad</label>
+            <select class="form-control" name="idEspecialidad" required>
+              <option value="">Seleccione...</option>
+            </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Crear Cita</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
 
 
 <!-- Scripts -->

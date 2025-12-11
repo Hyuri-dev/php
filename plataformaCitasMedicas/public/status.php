@@ -139,7 +139,7 @@ $allStatus = $conn->query("SELECT * FROM status")
               <p>Estados de las citas</p>
             </a>
             <!-- Pendiente por crear el apartado de las citas -->
-            <a href="crudSpecialty.php" class="nav-link active">
+            <a href="appointments.php" class="nav-link active">
               <i class="fa-solid fa-calendar"></i>
               <p>Citas</p>
             </a>
