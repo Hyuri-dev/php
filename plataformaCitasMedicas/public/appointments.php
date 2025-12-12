@@ -345,51 +345,60 @@ $resultado = $conn -> query($sql);
   </footer>
 </div>
 
-<div class="modal fade" id="modalNewAppointment" tabindex="-1" role="dialog" aria-labelledby="createAppointment" aria-hidden="true">
+<div class="modal fade" id="modalNewAppointment" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Crear nueva cita</h5>
+        <h5 class="modal-title">Crear nueva cita</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
 
-<form id="appointment-form">
+      <form id="appointment-form">
         <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="paciente">Paciente</label>
-            <select class="form-control" name="idUser" required>
-              <option value="">Seleccione...</option>
-            </select>
-          </div>
+            <div class="form-group">
+                <label for="paciente">Paciente</label>
+                <select class="form-control" name="idUser" required>
+                    <option value="">Seleccione...</option>
+                    <?php foreach ($allUsers as $user): ?>
+                         <option value="<?= $user['id'] ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-          <div class="form-group">
-            <label for="doctor">Doctor</label>
-            <select class="form-control" name="idUser" required>
-              <option value="">Seleccione...</option>
-            </select>
-      </div>
+            <div class="form-group">
+                <label for="doctor">Doctor</label>
+                <select class="form-control" name="idDoctor" required>
+                    <option value="">Seleccione...</option>
+                    <?php foreach ($allUsers as $user): ?>
+                      <!-- Ajustar para seleccionar nada mas los users de tipo  -->
+                         <option value="<?= $user['id'] == 1 ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
+                         <?php endforeach; ?>
+                     </select>
+            </div>
 
-      <div class="form-group">
-            <label>Fecha y Hora</label>
-            <input type="datetime-local" class="form-control" name="dateAppointment" required>
-      </div>
-      <div class="form-group">
-            <label for="doctor">Especialidad</label>
-            <select class="form-control" name="idEspecialidad" required>
-              <option value="">Seleccione...</option>
-            </select>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Crear Cita</button>
-      </div>
+            <div class="form-group">
+                <label>Fecha y Hora</label>
+                <input type="datetime-local" class="form-control" name="dateAppointment" required>
+            </div>
+
+            <div class="form-group">
+                <label for="especialidad">Especialidad</label>
+                <select class="form-control" name="idSpecialty" required>
+                    <option value="">Seleccione...</option>
+                    </select>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Crear Cita</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
-</form>
 
 
 
@@ -398,6 +407,7 @@ $resultado = $conn -> query($sql);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 <script src="../javascript/index.js"></script>
+<script src="../javascript/appointment.js"></script>
 
 
 </body>
