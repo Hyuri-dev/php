@@ -197,7 +197,6 @@ $resultado = $conn -> query($sql);
               <i class="fa-solid fa-gear"></i>
               <p>Estados de las citas</p>
             </a>
-            <!-- Pendiente por crear el apartado de las citas -->
             <a href="crudSpecialty.php" class="nav-link active">
               <i class="fa-solid fa-calendar"></i>
               <p>Citas</p>
@@ -420,76 +419,6 @@ $resultado = $conn -> query($sql);
   </div>
 </div>
 
-<!-- Modal para editar -->
-<div class="modal fade" id="modalEditAppointment" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header bg-info">
-        <h5 class="modal-title text-white">Editar Cita</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <form id="edit-appointment-form">
-        <input type="hidden" name="id" id="edit_id">
-
-        <div class="modal-body">
-            <div class="form-group">
-                <label>Paciente</label>
-                <select class="form-control" name="idUser" id="edit_idUser" required>
-                    <option value="">Seleccione...</option>
-                    <?php foreach ($allUsers as $user): ?>
-                         <option value="<?= $user['id'] ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Doctor</label>
-                <select class="form-control" name="idDoctor" id="edit_idDoctor" required>
-                    <option value="">Seleccione...</option>
-                    <?php foreach ($allUsers as $user): ?>
-                        <?php if ($user['idTypeUser'] == 3): ?> 
-                            <option value="<?= $user['id'] ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Fecha y Hora</label>
-                <input type="datetime-local" class="form-control" name="dateAppointment" id="edit_dateAppointment" required>
-            </div>
-
-            <div class="form-group">
-                <label>Especialidad</label>
-                <select class="form-control" name="idSpecialty" id="edit_idSpecialty" required>
-                    <option value="">Seleccione...</option>
-                    <?php foreach ($allEspecialty as $specialty): ?>
-                         <option value="<?= $specialty['id'] ?>"><?= $specialty['nombre'] ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Estado</label>
-                <select class="form-control" name="idStatus" id="edit_idStatus" required>
-                    <option value="3">Pendiente</option>
-                    <option value="4">Completada</option>
-                    <option value="2">Cancelada</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-info">Guardar Cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

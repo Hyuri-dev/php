@@ -1,5 +1,5 @@
 <?php 
-require_once '../php/plataformaCitasMedicas/config/database.php';
+require_once '../../config/database.php';
 
 header('Content-Type: application/json'); 
 
@@ -18,7 +18,7 @@ try {
   $stmt->execute([
     ':user'=>$idUser,
     ':doctor'=>$idDoctor,
-    ':specialty'=>$dateAppointment,
+    ':specialty'=>$idSpecialty,
     ':date'=>$dateAppointment,
     ':status'=>$idStatus
   ]);
