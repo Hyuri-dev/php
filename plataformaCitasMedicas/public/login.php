@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-// if ($usuario_valido) {
 
-// }
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +29,7 @@ session_start();
           <label for="usuario">Usuario</label>
         </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="usuario" name="contraseña" placeholder="Ingrese la contraseña" required>
+            <input type="password" class="form-control" id="usuario" name="contraseña" placeholder="Ingrese la contraseña" required>
           <label for="contraseña">Contraseña</label>
         </div>
         <?php
