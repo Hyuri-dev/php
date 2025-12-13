@@ -5,9 +5,7 @@ require_once '../src/controller/updateUser.php';
 require_once '../src/controller/deleteUser.php';
 require_once '../src/controller/rol_check.php';
 
-// if (session_status() === PHP_SESSION_NONE) {
-//     session_start();
-// }
+
 // Verificacion de sesión
 if (!isset($_SESSION['logueado']) || $_SESSION['logueado'] !== true) {
     header("Location: login.php");
@@ -84,23 +82,27 @@ FROM users u
 LEFT JOIN cities c ON u.idCity = c.id
 LEFT JOIN typeusers tu ON u.idTypeUser = tu.id")->fetchAll();
 
+$allEspecialty = $conn->query("SELECT id , nombre FROM specialty ")->fetchAll();
+
 //  Datos de las citas medicas
 
-$sql = "Select
-
+$sql = "SELECT 
     c.id AS id_appointment,
     c.dateAppointment,
     c.idStatus,
+    c.idUser,       -- <-- AGREGAR ESTO (ID del paciente)
+    c.idDoctor,     -- <-- AGREGAR ESTO (ID del doctor)
+    c.idSpecialty,  -- <-- AGREGAR ESTO (ID especialidad)
     s.name AS status_name,
     p.name AS patient,
-    p.lastname  AS patient_lastname,
+    p.lastname AS patient_lastname,
     m.name AS doctor,
     e.nombre AS specialty
   FROM appointment c
-  INNER JOIN users p ON c.idUser =p.id
-  INNER JOIN users m ON c.idDoctor =m.id
-  LEFT JOIN  specialty e ON c.idSpecialty = e.id
-  LEFT JOIN  status s ON c.idStatus = s.id
+  INNER JOIN users p ON c.idUser = p.id
+  INNER JOIN users m ON c.idDoctor = m.id
+  LEFT JOIN specialty e ON c.idSpecialty = e.id
+  LEFT JOIN status s ON c.idStatus = s.id
   ORDER BY c.dateAppointment ASC";
 
 $resultado = $conn -> query($sql);
@@ -291,10 +293,17 @@ $resultado = $conn -> query($sql);
                                 
                                 <td>
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-info btn-sm btn-editar" 
-                                                data-id="<?php echo $fila['id_appointment']; ?>" title="Editar">
+                                      <button type="button" class="btn btn-info btn-sm btn-editar" 
+                                                data-id="<?php echo $fila['id_appointment']; ?>"
+                                                data-user="<?php echo $fila['idUser']; ?>"
+                                                data-doctor="<?php echo $fila['idDoctor']; ?>"
+                                                data-specialty="<?php echo $fila['idSpecialty']; ?>"
+                                                data-date="<?php echo date('Y-m-d\TH:i', strtotime($fila['dateAppointment'])); ?>" 
+                                                data-status="<?php echo $fila['idStatus']; ?>"
+                                                title="Editar">
                                             <i class="fas fa-pencil-alt"></i>
                                         </button>
+                                        
                                         
                                         <button type="button" class="btn btn-danger btn-sm btn-eliminar" 
                                                 data-id="<?php echo $fila['id_appointment']; ?>" title="Cancelar">
@@ -370,12 +379,20 @@ $resultado = $conn -> query($sql);
             <div class="form-group">
                 <label for="doctor">Doctor</label>
                 <select class="form-control" name="idDoctor" required>
-                    <option value="">Seleccione...</option>
-                    <?php foreach ($allUsers as $user): ?>
-                      <!-- Ajustar para seleccionar nada mas los users de tipo  -->
-                         <option value="<?= $user['id'] == 1 ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
-                         <?php endforeach; ?>
-                     </select>
+    <option value="">Seleccione...</option>
+    
+    <?php foreach ($allUsers as $user): ?>
+        
+        <?php if ($user['idTypeUser'] == 3): ?> 
+            
+            <option value="<?= $user['id'] ?>">
+                <?= $user['name'] . ' ' . $user['lastname']. ' ' . $user['idTypeUser'] ?>
+            </option>
+            
+        <?php endif; ?>
+        
+    <?php endforeach; ?>
+</select>
             </div>
 
             <div class="form-group">
@@ -387,6 +404,9 @@ $resultado = $conn -> query($sql);
                 <label for="especialidad">Especialidad</label>
                 <select class="form-control" name="idSpecialty" required>
                     <option value="">Seleccione...</option>
+                    <?php foreach ($allEspecialty as $specialty): ?>
+                         <option value="<?= $specialty['id'] ?>"><?= $specialty['nombre'] ?></option>
+                    <?php endforeach; ?>
                     </select>
             </div>
         </div>
@@ -400,13 +420,81 @@ $resultado = $conn -> query($sql);
   </div>
 </div>
 
+<!-- Modal para editar -->
+<div class="modal fade" id="modalEditAppointment" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title text-white">Editar Cita</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
+      <form id="edit-appointment-form">
+        <input type="hidden" name="id" id="edit_id">
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Paciente</label>
+                <select class="form-control" name="idUser" id="edit_idUser" required>
+                    <option value="">Seleccione...</option>
+                    <?php foreach ($allUsers as $user): ?>
+                         <option value="<?= $user['id'] ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Doctor</label>
+                <select class="form-control" name="idDoctor" id="edit_idDoctor" required>
+                    <option value="">Seleccione...</option>
+                    <?php foreach ($allUsers as $user): ?>
+                        <?php if ($user['idTypeUser'] == 3): ?> 
+                            <option value="<?= $user['id'] ?>"><?= $user['name'] . ' ' . $user['lastname'] ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha y Hora</label>
+                <input type="datetime-local" class="form-control" name="dateAppointment" id="edit_dateAppointment" required>
+            </div>
+
+            <div class="form-group">
+                <label>Especialidad</label>
+                <select class="form-control" name="idSpecialty" id="edit_idSpecialty" required>
+                    <option value="">Seleccione...</option>
+                    <?php foreach ($allEspecialty as $specialty): ?>
+                         <option value="<?= $specialty['id'] ?>"><?= $specialty['nombre'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+                <select class="form-control" name="idStatus" id="edit_idStatus" required>
+                    <option value="3">Pendiente</option>
+                    <option value="4">Completada</option>
+                    <option value="2">Cancelada</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-info">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<script src="../javascript/index.js"></script>
 <script src="../javascript/appointment.js"></script>
 
 
